@@ -42,12 +42,10 @@ export class MidiStream {
     /**
      * Stop playing a certain note
      * @param note the note to be stopped
-     * @param velocity the velocity that the note is played at
      */
-    stopNote(note: number, velocity: number): void {
+    stopNote(note: number): void {
         this.noteSubject$.next(noteBuilder(note, "off", 0));
     }
-
 
     /**
      * A stream of midi notes using frequencies
