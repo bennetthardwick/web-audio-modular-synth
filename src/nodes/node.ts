@@ -1,3 +1,4 @@
-export class Node {
-
+export interface ModularNode {
+    connect: (node: AudioNode) => void
+    outNode: AudioNode
 }

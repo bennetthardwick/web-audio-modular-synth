@@ -2,15 +2,13 @@ import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MidiConversion, noteBuilder } from '.';
 
-export interface MidiNote extends BaseNote {
-    note: number;
-}
 
-export interface FrequencyNote extends BaseNote {
+export interface FrequencyNote extends MidiNote {
     frequency: number;
 }
 
-export interface BaseNote {
+export interface MidiNote {
+    note: number;
     type: MidiNoteType;
     velocity: number;
 }
@@ -26,8 +24,8 @@ export class MidiStream {
     /**
      * Create a midi stream that handles midi notes
      */
-    constructor() {
-        this.converter = new MidiConversion()
+    constructor(frequency?: number, precision?: number) {
+        this.converter = new MidiConversion(frequency, precision);
     }
 
     /**
@@ -54,8 +52,7 @@ export class MidiStream {
         return this.noteSubject$
             .asObservable()
             .pipe(map(note => ({ 
-                type: note.type, 
-                velocity: note.velocity,
+                ...note,
                 frequency: this.converter.noteToFreq(note.note)
             })));
     }
