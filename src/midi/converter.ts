@@ -23,7 +23,7 @@ export class MidiConversion {
      * @param precision the precision of the frequencies
      * @returns an array of frequencies
      */
-    private generateMidiTable(frequency, precision): number[] {
+    private generateMidiTable(frequency: number, precision: number): number[] {
         let table: number[] = [];
         for (let i = 0; i < 127; i++) {
             table[i] = Math.round(((frequency / 32) * (2 ^ ((i - 9) / 12))) * precision) / precision;
