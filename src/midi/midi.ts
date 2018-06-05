@@ -1,6 +1,22 @@
 import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MidiConversion } from '.';
+import { MidiConversion, noteBuilder } from '.';
+
+export interface MidiNote extends BaseNote {
+    note: number;
+}
+
+export interface FrequencyNote extends BaseNote {
+    frequency: number;
+}
+
+export interface BaseNote {
+    type: MidiNoteType;
+    velocity: number;
+}
+
+export type MidiNoteType = 
+    "on" | "off"
 
 export class MidiStream {
 
@@ -15,6 +31,25 @@ export class MidiStream {
     }
 
     /**
+     * Start playing a note
+     * @param note the note to be played
+     * @param velocity the velocity that the note is played at
+     */
+    startNote(note: number, velocity: number): void {
+        this.noteSubject$.next(noteBuilder(note, "on", velocity))
+    }
+
+    /**
+     * Stop playing a certain note
+     * @param note the note to be stopped
+     * @param velocity the velocity that the note is played at
+     */
+    stopNote(note: number, velocity: number): void {
+        this.noteSubject$.next(noteBuilder(note, "off", 0));
+    }
+
+
+    /**
      * A stream of midi notes using frequencies
      */
     get onNote$(): Observable<FrequencyNote> {
@@ -22,6 +57,7 @@ export class MidiStream {
             .asObservable()
             .pipe(map(note => ({ 
                 type: note.type, 
+                velocity: note.velocity,
                 frequency: this.converter.noteToFreq(note.note)
             })));
     }
@@ -34,14 +70,4 @@ export class MidiStream {
             .asObservable();
     }
 
-}
-
-export interface MidiNote {
-    type: number;
-    note: number;
-}
-
-export interface FrequencyNote {
-    type: number;
-    frequency: number;
 }
