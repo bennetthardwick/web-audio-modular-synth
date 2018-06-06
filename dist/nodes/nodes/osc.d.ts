@@ -15,7 +15,6 @@ export interface OscillatorEnvelope {
     sustain: number;
 }
 export interface OscillatorConfig {
-    gain?: number;
     evelope?: OscillatorEnvelopeOptions;
 }
 export declare class Oscillator implements ModularNode {
@@ -28,7 +27,12 @@ export declare class Oscillator implements ModularNode {
     start(): void;
     stop(): void;
     readonly outNode: AudioNode;
-    setType(type: OscillatorType): void;
+    attack: number;
+    release: number;
+    detune: number;
+    pitchLFO: AudioDestinationNode;
+    volumeLFO: AudioDestinationNode;
+    type: OscillatorType;
 }
 export declare class SquareOscillator extends Oscillator {
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig);
@@ -37,8 +41,5 @@ export declare class TriangleOscillator extends Oscillator {
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig);
 }
 export declare class SawOscillator extends Oscillator {
-    constructor(context: AudioContext, frequency: number, config?: OscillatorConfig);
-}
-export declare class SineOscillator extends Oscillator {
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig);
 }

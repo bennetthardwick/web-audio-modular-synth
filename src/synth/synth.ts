@@ -16,22 +16,27 @@ export class Synth {
         osc.connect(this.context.destination);
         osc.listen(this.midi);
 
-        interval(1500).subscribe(() => {
+        interval(1000).subscribe(() => {
             this.playNote(69, 100, 200);
         });
 
-        timer(1000).subscribe(() => {
-            interval(1500).subscribe(() => {
-                this.playNote(76, 100, 200);
+        timer(250).subscribe(() => {
+            interval(1000).subscribe(() => {
+                this.playNote(72, 100, 200);
             });
         })
         
         timer(500).subscribe(() => {
-            interval(1500).subscribe(() => {
-                this.playNote(72, 100, 200);
+            interval(1000).subscribe(() => {
+                this.playNote(76, 100, 200);
             });
         });
 
+        timer(750).subscribe(() => {
+            interval(1000).subscribe(() => {
+                this.playNote(72, 100, 200);
+            });
+        });
 
     }
     

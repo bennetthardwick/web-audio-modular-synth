@@ -1,12 +1,13 @@
 import { ModularNode } from '..';
 
-const DEFAULT_GAIN = 0.1;
 const DEAFAULT_ENVEOPE = {
     attack: 0.01,
     release: 0.02,
     decay: 0.001,
-    sustain: 0.001
+    sustain: 0.1
 }
+
+const DEFAULT_DETUNE_SHIFT = 0.01;
 
 export interface OscillatorConstructor {
     new(context: AudioContext, frequency: number, config?: OscillatorConfig): Oscillator
@@ -27,7 +28,6 @@ export interface OscillatorEnvelope {
 }
 
 export interface OscillatorConfig {
-    gain?: number;
     evelope?: OscillatorEnvelopeOptions
 }
 
@@ -48,10 +48,10 @@ export class Oscillator implements ModularNode {
         this.context = context;
         this.oscillator = this.context.createOscillator();
         this.oscillator.frequency.value = frequency;
-        this.gain = this.context.createGain();
-        this.gain.gain.value = (config ? config.gain : undefined) || DEFAULT_GAIN;
-        this.oscillator.connect(this.gain);
         this.envelope = { ...DEAFAULT_ENVEOPE, ...(config ? config.evelope : null) }; 
+        this.gain = this.context.createGain();
+        this.gain.gain.value = this.envelope.sustain;
+        this.oscillator.connect(this.gain);
     }
 
     /**
@@ -71,7 +71,7 @@ export class Oscillator implements ModularNode {
      */
     start() {
         this.oscillator.start();
-        this.gain.gain.linearRampToValueAtTime(0.1, this.context.currentTime + this.envelope.attack);
+        this.gain.gain.linearRampToValueAtTime(this.envelope.sustain, this.context.currentTime + this.envelope.attack);
     }
 
     /**
@@ -90,10 +90,44 @@ export class Oscillator implements ModularNode {
     }
 
     /**
-     * Set the type of the HTML5 osc
-     * @param type wave type
+     * The envelope attack amount
      */
-    setType(type: OscillatorType) {
+    set attack(attack: number) {
+        this.envelope.attack = attack;
+    }
+
+    /**
+     * The envelope release amount
+     */
+    set release(release: number) {
+        this.envelope.release = release;
+    }
+
+    /**
+     * Set an amount to detune to osc by
+     */
+    set detune(detune: number) {
+        this.oscillator.detune.linearRampToValueAtTime(detune, this.context.currentTime + DEFAULT_DETUNE_SHIFT); 
+    }
+
+    /**
+     * Set an lfo to modulate pitch
+     */
+    set pitchLFO(modulator: AudioDestinationNode) {
+        modulator.connect(this.oscillator.frequency);
+    }
+
+    /**
+     * Set an lfo to modulate volume
+     */
+    set volumeLFO(modulator: AudioDestinationNode) {
+        modulator.connect(this.gain.gain);
+    }
+
+    /**
+     * Set the type of the HTML5 osc
+     */
+    set type(type: OscillatorType) {
         this.oscillator.type = type;
     }
 
@@ -108,7 +142,7 @@ export class SquareOscillator extends Oscillator {
      */
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig) {
         super(context, frequency, config);
-        this.setType('square');
+        this.type = 'square';
     }
 }
 
@@ -121,7 +155,7 @@ export class TriangleOscillator extends Oscillator {
      */
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig) {
         super(context, frequency, config);
-        this.setType('triangle');
+        this.type = 'triangle';
     }
 } 
 
@@ -134,19 +168,6 @@ export class SawOscillator extends Oscillator {
      */
     constructor(context: AudioContext, frequency: number, config?: OscillatorConfig) {
         super(context, frequency, config);
-        this.setType('sawtooth');
-    }
-} 
-
-export class SineOscillator extends Oscillator {
-    /**
-     * Create an instance of a sine wave oscillator
-     * @param context the audio context
-     * @param frequency the frequency of the osc voice
-     * @param gain the gain (default: 1)
-     */
-    constructor(context: AudioContext, frequency: number, config?: OscillatorConfig) {
-        super(context, frequency, config);
-        this.setType('sine');
+        this.type = 'sawtooth';
     }
 } 
