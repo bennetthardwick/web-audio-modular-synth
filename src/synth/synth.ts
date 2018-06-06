@@ -1,48 +1,31 @@
 import { MidiStream } from '../midi';
-import { PolyphonicOscillator } from '../modules';
-import { SawOscillator } from '../nodes';
-import { timer, interval } from 'rxjs';
+import { timer } from 'rxjs';
 
 export class Synth {
 
-    private midi: MidiStream;
-    private context: AudioContext;
+    private _midi: MidiStream;
+    private _context: AudioContext;
 
     constructor(frequency?: number, precision?: number) {
-        this.midi = new MidiStream(frequency, precision);
-        this.context = new AudioContext();
+        this._midi = new MidiStream(frequency, precision);
+        this._context = new AudioContext();
+    }
 
-        let osc = new PolyphonicOscillator(this.context, SawOscillator, 5);
-        osc.connect(this.context.destination);
-        osc.listen(this.midi);
+    get midi(): MidiStream {
+        return this._midi;
+    }
 
-        interval(1000).subscribe(() => {
-            this.playNote(69, 100, 200);
-        });
-
-        timer(250).subscribe(() => {
-            interval(1000).subscribe(() => {
-                this.playNote(72, 100, 200);
-            });
-        })
-        
-        timer(500).subscribe(() => {
-            interval(1000).subscribe(() => {
-                this.playNote(76, 100, 200);
-            });
-        });
-
-        timer(750).subscribe(() => {
-            interval(1000).subscribe(() => {
-                this.playNote(72, 100, 200);
-            });
-        });
-
+    get context(): AudioContext {
+        return this._context;
     }
     
-    playNote(note: number, velocity: number, duration: number): void {
+    playNote(note: number, velocity: number, duration?: number): void {
         this.midi.startNote(note, velocity);
-        timer(duration).subscribe(() => this.midi.stopNote(note));
+        if (duration) timer(duration).subscribe(() => this.midi.stopNote(note));
+    }
+
+    stopNote(note: number) {
+        this.midi.stopNote(note);
     }
 
 }

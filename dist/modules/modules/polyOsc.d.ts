@@ -15,4 +15,5 @@ export declare class PolyphonicOscillator {
     stopNote(frequencyNote: FrequencyNote): void;
     private stopNoteByKey;
     connect(node: AudioNode | ModularNode): void;
+    type: string;
 }

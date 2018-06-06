@@ -1,6 +1,11 @@
-import { Oscillator, OscillatorConstructor, ModularNode } from '../../nodes';
+import { Oscillator, OscillatorConstructor, ModularNode, SawOscillator, SquareOscillator, TriangleOscillator } from '../../nodes';
 import { FrequencyNote, MidiStream } from '../../midi';
 import { timer } from 'rxjs';
+
+const SIN_OSC = 'sine';
+const SQUARE_OSC = 'square';
+const TRIANGE_OSC = 'triangle';
+const SAW_OSC = 'sawtooth';
 
 export class PolyphonicOscillator {
 
@@ -49,9 +54,6 @@ export class PolyphonicOscillator {
      * @param duration optional duration
      */
     playNote(frequencyNote: FrequencyNote, duration?: number) {
-
-        console.log(this.voicePriority);
-
         let note = frequencyNote.note.toString();
         if (!this.voices[note]) {
             this.prepareAddVoice(note);
@@ -95,6 +97,26 @@ export class PolyphonicOscillator {
             this.gain.connect(node);
         } else {
             this.gain.connect(node.outNode);
+        }
+    }
+
+    /**
+     * Set the type of the PolyOsc
+     */
+    set type(type: string) {
+        switch(type) {
+            case SAW_OSC:
+                this.Oscillator = SawOscillator;
+                break;
+            case SIN_OSC:
+                this.Oscillator = Oscillator;
+                break;
+            case SQUARE_OSC:
+                this.Oscillator = SquareOscillator;
+                break;
+            case TRIANGE_OSC:
+                this.Oscillator = TriangleOscillator;
+                break;
         }
     }
 

@@ -1,3 +1,5 @@
-import { Synth } from './synth';
+import { ThreeOsc } from './synth';
 
-new Synth(440, 10);
+let synth = new ThreeOsc();
+
+synth.playNote(69, 100, 1000);
