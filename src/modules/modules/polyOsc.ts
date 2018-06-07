@@ -39,20 +39,6 @@ export class PolyphonicOscillator {
     this.numVoices = voices;
   }
 
-  private prepareAddVoice(voice: string): void {
-    this.voicePriority.push(voice);
-    if (this.voicePriority.length > this.numVoices) {
-      this.stopNoteByKey(this.voicePriority.shift() as string);
-    }
-  }
-
-  private removeVoiceCount(voice: string): void {
-    const index = this.voicePriority.indexOf(voice);
-    if (index > -1) {
-      this.voicePriority.splice(index, 1);
-    }
-  }
-
   public listen(midi: MidiStream) {
     midi.onNote$.subscribe(note => {
       if (note.type === "on") {
@@ -105,17 +91,10 @@ export class PolyphonicOscillator {
     this.removeVoiceCount(note);
   }
 
-  private stopNoteByKey(key: string) {
-    if (!this.voices[key]) {
-      return;
-    }
-    this.voices[key].stop();
-  }
-
   /**
    * Connect the output of the osc
    * @param node the node to connect to
-   * */
+   */
   public connect(node: AudioNode | ModularNode) {
     if (node instanceof AudioNode) {
       this.gain.connect(node);
@@ -142,5 +121,26 @@ export class PolyphonicOscillator {
         this.Oscillator = TriangleOscillator;
         break;
     }
+  }
+
+  private prepareAddVoice(voice: string): void {
+    this.voicePriority.push(voice);
+    if (this.voicePriority.length > this.numVoices) {
+      this.stopNoteByKey(this.voicePriority.shift() as string);
+    }
+  }
+
+  private removeVoiceCount(voice: string): void {
+    const index = this.voicePriority.indexOf(voice);
+    if (index > -1) {
+      this.voicePriority.splice(index, 1);
+    }
+  }
+
+  private stopNoteByKey(key: string) {
+    if (!this.voices[key]) {
+      return;
+    }
+    this.voices[key].stop();
   }
 }

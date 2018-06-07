@@ -2,20 +2,20 @@ import { timer } from "rxjs";
 import { MidiStream } from "../midi";
 
 export class Synth {
-  private _midi: MidiStream;
-  private _context: AudioContext;
+  private midiStream: MidiStream;
+  private audioContext: AudioContext;
 
   constructor(frequency?: number, precision?: number) {
-    this._midi = new MidiStream(frequency, precision);
-    this._context = new AudioContext();
+    this.midiStream = new MidiStream(frequency, precision);
+    this.audioContext = new AudioContext();
   }
 
   get midi(): MidiStream {
-    return this._midi;
+    return this.midiStream;
   }
 
   get context(): AudioContext {
-    return this._context;
+    return this.audioContext;
   }
 
   /**

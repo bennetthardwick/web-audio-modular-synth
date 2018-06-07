@@ -2,8 +2,8 @@ import { ModularNode } from "..";
 
 const DEAFAULT_ENVEOPE = {
   attack: 0.01,
-  release: 0.02,
   decay: 0.001,
+  release: 0.02,
   sustain: 0.1
 };
 

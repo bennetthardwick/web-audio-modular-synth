@@ -3,7 +3,7 @@ import { ModularNode } from "..";
 export class LFO {
   private oscillator: OscillatorNode;
   private context: AudioContext;
-  private _amplitude: GainNode;
+  private waveAmplitude: GainNode;
 
   /**
    * Create an instance of a low frequency oscillator
@@ -15,9 +15,9 @@ export class LFO {
     this.context = context;
     this.oscillator = this.context.createOscillator();
     this.oscillator.frequency.value = frequency;
-    this._amplitude = this.context.createGain();
-    this._amplitude.gain.value = amplitude;
-    this.oscillator.connect(this._amplitude);
+    this.waveAmplitude = this.context.createGain();
+    this.waveAmplitude.gain.value = amplitude;
+    this.oscillator.connect(this.waveAmplitude);
   }
 
   /**
@@ -26,9 +26,9 @@ export class LFO {
    */
   public connect(node: AudioNode | ModularNode): void {
     if (node instanceof AudioNode) {
-      this._amplitude.connect(node);
+      this.waveAmplitude.connect(node);
     } else {
-      this._amplitude.connect(node.outNode);
+      this.waveAmplitude.connect(node.outNode);
     }
   }
 
@@ -64,6 +64,6 @@ export class LFO {
    * Set the amplitude of the lfo
    */
   set amplitude(amplitude: number) {
-    this._amplitude.gain.value = amplitude;
+    this.waveAmplitude.gain.value = amplitude;
   }
 }

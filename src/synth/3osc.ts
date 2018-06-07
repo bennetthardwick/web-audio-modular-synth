@@ -2,7 +2,9 @@ import { Synth } from ".";
 import { PolyphonicOscillator } from "../modules";
 import { Oscillator, SquareOscillator, TriangleOscillator } from "../nodes";
 
-export interface OscConfig {}
+export interface OscConfig {
+  attack?: number;
+}
 
 export interface ThreeOscConfig {
   oscOne?: OscConfig;
