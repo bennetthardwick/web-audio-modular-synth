@@ -12,8 +12,8 @@ export class MidiConversion {
    * @param precision the percision of the frequencies (default: 5)
    */
   constructor(frequency?: number, precision?: number) {
-    this.frequency = frequency || DEFAULT_FREQUENCY;
-    this.precision = precision || DEFAULT_PRECISION;
+    this.frequency = frequency !== undefined ? frequency : DEFAULT_FREQUENCY;
+    this.precision = precision !== undefined ? precision : DEFAULT_PRECISION;
     this.table = this.generateMidiTable(this.frequency, this.precision);
   }
 
@@ -36,7 +36,7 @@ export class MidiConversion {
     const table: number[] = [];
     for (let i = 0; i < 127; i++) {
       table[i] =
-        Math.floor(
+        Math.round(
           (frequency / 32) * Math.pow(2, (i - 9) / 12) * Math.pow(10, precision)
         ) / Math.pow(10, precision);
     }

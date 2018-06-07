@@ -21,7 +21,7 @@ export const enum Oscs {
 export class ThreeOsc extends Synth {
   private oscs: PolyphonicOscillator[];
   constructor() {
-    super(440, 5);
+    super(440, 0);
     this.oscs = [
       new PolyphonicOscillator(this.context, TriangleOscillator, 5),
       new PolyphonicOscillator(this.context, Oscillator, 5),
