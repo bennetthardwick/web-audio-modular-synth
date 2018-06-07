@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  let config = {
+  let configuration = {
     frameworks: ["jasmine", "karma-typescript"],
     files: [{ pattern: "src/**/*.ts" }],
     preprocessors: {
@@ -29,8 +29,8 @@ module.exports = function(config) {
   };
 
   if (process.env.TRAVIS) {
-    config.browsers = ["Chrome_travis_ci"];
+    configuration.browsers = ["Chrome_travis_ci"];
   }
 
-  config.set(config);
+  config.set(configuration);
 };
