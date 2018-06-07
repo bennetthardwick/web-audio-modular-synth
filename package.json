@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine-ts \"**/*.spec.ts\"",
+    "test": "karma",
     "build": "webpack",
     "build:watch": "webpack --watch",
     "build:prod": "webpack -p",
@@ -18,10 +18,17 @@
     "rxjs": "^6.2.0"
   },
   "devDependencies": {
+    "@types/jasmine": "^2.8.8",
     "awesome-typescript-loader": "^5.0.0",
     "husky": "^0.14.3",
     "inline-source-map": "^0.6.2",
+    "jasmine-core": "^3.1.0",
     "jasmine-ts": "^0.2.1",
+    "karma": "^2.0.2",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.2",
+    "karma-typescript": "^3.0.12",
     "prettier": "^1.13.4",
     "pretty-quick": "^1.6.0",
     "ts-loader": "^3.5.0",
