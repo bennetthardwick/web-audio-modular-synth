@@ -1,2 +1,1 @@
-export declare class Parser {
-}
+export declare class Parser {}

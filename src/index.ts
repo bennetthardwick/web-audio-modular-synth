@@ -1,4 +1,4 @@
-import { ThreeOsc } from './synth';
+import { ThreeOsc } from "./synth";
 
 let synth = new ThreeOsc();
 

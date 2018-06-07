@@ -1,3 +1,1 @@
-export class ComputerKeyboard {
-
-}
+export class ComputerKeyboard {}

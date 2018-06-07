@@ -1,2 +1,2 @@
-export * from './synth';
-export * from './3osc';
+export * from "./synth";
+export * from "./3osc";
