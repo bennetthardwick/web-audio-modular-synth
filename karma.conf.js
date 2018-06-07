@@ -1,7 +1,7 @@
 module.exports = function(config) {
   config.set({
     frameworks: ["jasmine", "karma-typescript"],
-    files: [{ pattern: "spec/**/*.spec.ts" }],
+    files: [{ pattern: "src/**/*.ts" }],
     preprocessors: {
       "**/*.ts": ["karma-typescript"]
     },
@@ -17,7 +17,7 @@ module.exports = function(config) {
         lib: ["dom", "es6"]
       }
     },
-    reporters: ["dots", "karma-typescript"],
+    reporters: ["spec"],
     browsers: ["Chrome"],
     singleRun: true
   });
