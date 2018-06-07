@@ -13,9 +13,9 @@ export class LFO {
    */
   constructor(context: AudioContext, frequency: number, amplitude: number) {
     this.context = context;
-    this.oscillator = context.createOscillator();
+    this.oscillator = this.context.createOscillator();
     this.oscillator.frequency.value = frequency;
-    this._amplitude = context.createGain();
+    this._amplitude = this.context.createGain();
     this._amplitude.gain.value = amplitude;
     this.oscillator.connect(this._amplitude);
   }
