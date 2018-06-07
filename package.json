@@ -9,7 +9,7 @@
     "build:watch": "webpack --watch",
     "build:prod": "webpack -p",
     "start": "webpack-dev-server",
-    "precommit": "pretty-quick --staged"
+    "precommit": "tslint --fix --project ./tsconfig.json && pretty-quick --staged"
   },
   "keywords": [],
   "author": "",
