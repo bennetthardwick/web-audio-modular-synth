@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  config.set({
+  let config = {
     frameworks: ["jasmine", "karma-typescript"],
     files: [{ pattern: "src/**/*.ts" }],
     preprocessors: {
@@ -19,6 +19,18 @@ module.exports = function(config) {
     },
     reporters: ["spec"],
     browsers: ["Chrome"],
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: "Chrome",
+        flags: ["--no-sandbox"]
+      }
+    },
     singleRun: true
-  });
+  };
+
+  if (process.env.TRAVIS) {
+    config.browsers = ["Chrome_travis_ci"];
+  }
+
+  config.set(config);
 };
