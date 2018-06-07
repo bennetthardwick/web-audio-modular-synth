@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "karma",
+    "test": "karma start",
     "build": "webpack",
     "build:watch": "webpack --watch",
     "build:prod": "webpack -p",
