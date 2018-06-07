@@ -1,6 +1,6 @@
 import { Synth } from ".";
 import { PolyphonicOscillator } from "../modules";
-import { TriangleOscillator, Oscillator, SquareOscillator } from "../nodes";
+import { Oscillator, SquareOscillator, TriangleOscillator } from "../nodes";
 
 export interface OscConfig {}
 
@@ -33,7 +33,7 @@ export class ThreeOsc extends Synth {
    * Configure a certain oscillator
    * @param osc the number of the osc (starting at 0)
    */
-  configure(osc: Oscs): PolyphonicOscillator {
+  public configure(osc: Oscs): PolyphonicOscillator {
     return this.oscs[osc];
   }
 }

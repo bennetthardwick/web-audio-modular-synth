@@ -1,5 +1,5 @@
-import { MidiStream } from "../midi";
 import { timer } from "rxjs";
+import { MidiStream } from "../midi";
 
 export class Synth {
   private _midi: MidiStream;
@@ -24,16 +24,18 @@ export class Synth {
    * @param velocity note velocity
    * @param duration duration of the note
    */
-  playNote(note: number, velocity: number, duration?: number): void {
+  public playNote(note: number, velocity: number, duration?: number): void {
     this.midi.startNote(note, velocity);
-    if (duration) timer(duration).subscribe(() => this.midi.stopNote(note));
+    if (duration) {
+      timer(duration).subscribe(() => this.midi.stopNote(note));
+    }
   }
 
   /**
    * Stop playing a note (if it doesn't have a duration)
    * @param note note to stop playing
    */
-  stopNote(note: number): void {
+  public stopNote(note: number): void {
     this.midi.stopNote(note);
   }
 }

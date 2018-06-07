@@ -24,7 +24,7 @@ export class LFO {
    * Connect the oscillator to a node
    * @param node the node to connect to
    */
-  connect(node: AudioNode | ModularNode): void {
+  public connect(node: AudioNode | ModularNode): void {
     if (node instanceof AudioNode) {
       this._amplitude.connect(node);
     } else {
@@ -35,14 +35,14 @@ export class LFO {
   /**
    * Start the oscillation
    */
-  start(): void {
+  public start(): void {
     this.oscillator.start();
   }
 
   /**
    * Stop the oscillation
    */
-  stop(): void {
+  public stop(): void {
     this.oscillator.stop();
   }
 

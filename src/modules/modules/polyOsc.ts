@@ -1,13 +1,13 @@
+import { timer } from "rxjs";
+import { FrequencyNote, MidiStream } from "../../midi";
 import {
+  ModularNode,
   Oscillator,
   OscillatorConstructor,
-  ModularNode,
   SawOscillator,
   SquareOscillator,
   TriangleOscillator
 } from "../../nodes";
-import { FrequencyNote, MidiStream } from "../../midi";
-import { timer } from "rxjs";
 
 const SIN_OSC = "sine";
 const SQUARE_OSC = "square";
@@ -47,14 +47,19 @@ export class PolyphonicOscillator {
   }
 
   private removeVoiceCount(voice: string): void {
-    let index = this.voicePriority.indexOf(voice);
-    if (index > -1) this.voicePriority.splice(index, 1);
+    const index = this.voicePriority.indexOf(voice);
+    if (index > -1) {
+      this.voicePriority.splice(index, 1);
+    }
   }
 
-  listen(midi: MidiStream) {
+  public listen(midi: MidiStream) {
     midi.onNote$.subscribe(note => {
-      if (note.type === "on") this.playNote(note);
-      else if (note.type === "off") this.stopNote(note);
+      if (note.type === "on") {
+        this.playNote(note);
+      } else if (note.type === "off") {
+        this.stopNote(note);
+      }
     });
   }
 
@@ -63,8 +68,8 @@ export class PolyphonicOscillator {
    * @param note a note to be played
    * @param duration optional duration
    */
-  playNote(frequencyNote: FrequencyNote, duration?: number) {
-    let note = frequencyNote.note.toString();
+  public playNote(frequencyNote: FrequencyNote, duration?: number) {
+    const note = frequencyNote.note.toString();
     if (!this.voices[note]) {
       this.prepareAddVoice(note);
       this.voices[note] = new this.Oscillator(
@@ -72,30 +77,38 @@ export class PolyphonicOscillator {
         frequencyNote.frequency
       );
       this.voices[note].connect(this.gain);
-    } else return;
+    } else {
+      return;
+    }
 
     if (duration) {
       this.voices[note].start();
       timer(duration).subscribe(() => {
         this.stopNote(frequencyNote);
       });
-    } else this.voices[note].start();
+    } else {
+      this.voices[note].start();
+    }
   }
 
   /**
    * Stop playing a certain note
    * @param note a note to be stopped
    */
-  stopNote(frequencyNote: FrequencyNote) {
-    let note = frequencyNote.note.toString();
-    if (!this.voices[note]) return;
+  public stopNote(frequencyNote: FrequencyNote) {
+    const note = frequencyNote.note.toString();
+    if (!this.voices[note]) {
+      return;
+    }
     this.voices[note].stop();
     delete this.voices[note];
     this.removeVoiceCount(note);
   }
 
   private stopNoteByKey(key: string) {
-    if (!this.voices[key]) return;
+    if (!this.voices[key]) {
+      return;
+    }
     this.voices[key].stop();
   }
 
@@ -103,7 +116,7 @@ export class PolyphonicOscillator {
    * Connect the output of the osc
    * @param node the node to connect to
    * */
-  connect(node: AudioNode | ModularNode) {
+  public connect(node: AudioNode | ModularNode) {
     if (node instanceof AudioNode) {
       this.gain.connect(node);
     } else {

@@ -15,7 +15,15 @@ export class MidiConversion {
     this.frequency = frequency || DEFAULT_FREQUENCY;
     this.precision = precision || DEFAULT_PRECISION;
     this.table = this.generateMidiTable(this.frequency, this.precision);
-    console.log(this.table, precision, frequency);
+  }
+
+  /**
+   * Convert a midi note number to a frequency
+   * @param note a midi note number
+   * @returns a frequency
+   */
+  public noteToFreq(note: number): number {
+    return this.table[note];
   }
 
   /**
@@ -25,7 +33,7 @@ export class MidiConversion {
    * @returns an array of frequencies
    */
   private generateMidiTable(frequency: number, precision: number): number[] {
-    let table: number[] = [];
+    const table: number[] = [];
     for (let i = 0; i < 127; i++) {
       table[i] =
         Math.floor(
@@ -33,14 +41,5 @@ export class MidiConversion {
         ) / Math.pow(10, precision);
     }
     return table;
-  }
-
-  /**
-   * Convert a midi note number to a frequency
-   * @param note a midi note number
-   * @returns a frequency
-   */
-  noteToFreq(note: number): number {
-    return this.table[note];
   }
 }

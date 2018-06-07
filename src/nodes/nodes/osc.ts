@@ -68,9 +68,10 @@ export class Oscillator implements ModularNode {
    * Connect the oscillator to an audio node
    * @param node an HTML5 audio node or ModularNode
    */
-  connect(node: AudioNode | ModularNode): void {
-    if (node instanceof AudioNode) this.gain.connect(node);
-    else {
+  public connect(node: AudioNode | ModularNode): void {
+    if (node instanceof AudioNode) {
+      this.gain.connect(node);
+    } else {
       this.gain.connect(node.outNode);
     }
   }
@@ -78,7 +79,7 @@ export class Oscillator implements ModularNode {
   /**
    * Start the osc
    */
-  start() {
+  public start() {
     this.oscillator.start();
     this.gain.gain.linearRampToValueAtTime(
       this.envelope.sustain,
@@ -89,7 +90,7 @@ export class Oscillator implements ModularNode {
   /**
    * Stop the osc
    */
-  stop() {
+  public stop() {
     this.oscillator.stop(this.context.currentTime + this.envelope.release);
     this.gain.gain.linearRampToValueAtTime(
       0,

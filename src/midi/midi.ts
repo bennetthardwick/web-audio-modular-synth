@@ -1,4 +1,4 @@
-import { Subject, Observable, Subscription } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { MidiConversion, noteBuilder } from ".";
 
@@ -30,7 +30,7 @@ export class MidiStream {
    * @param note the note to be played
    * @param velocity the velocity that the note is played at
    */
-  startNote(note: number, velocity: number): void {
+  public startNote(note: number, velocity: number): void {
     this.noteSubject$.next(noteBuilder(note, "on", velocity));
   }
 
@@ -38,7 +38,7 @@ export class MidiStream {
    * Stop playing a certain note
    * @param note the note to be stopped
    */
-  stopNote(note: number): void {
+  public stopNote(note: number): void {
     this.noteSubject$.next(noteBuilder(note, "off", 0));
   }
 
@@ -65,7 +65,7 @@ export class MidiStream {
    * Listen to an external midi stream
    * @param midi the midi stream to be joined
    */
-  join(midi: MidiStream): Subscription {
+  public join(midi: MidiStream): Subscription {
     return midi.onNote$.subscribe(note => this.noteSubject$.next(note));
   }
 
@@ -73,7 +73,7 @@ export class MidiStream {
    * Stop listening to an external midi stream
    * @param sub the subscription to stop
    */
-  remove(sub: Subscription): void {
+  public remove(sub: Subscription): void {
     sub.unsubscribe();
   }
 }
