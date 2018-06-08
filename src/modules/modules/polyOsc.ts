@@ -14,6 +14,8 @@ const SQUARE_OSC = "square";
 const TRIANGE_OSC = "triangle";
 const SAW_OSC = "sawtooth";
 
+const DEFAULT_GAIN = 0.8;
+
 export class PolyphonicOscillator {
   private voices: { [key: string]: Oscillator } = {};
   private numVoices: number;
@@ -21,6 +23,7 @@ export class PolyphonicOscillator {
   private Oscillator: OscillatorConstructor;
   private context: AudioContext;
   private gain: GainNode;
+  private compressor: DynamicsCompressorNode;
 
   /**
    * Create an intstance of a polyphoic oscillator
@@ -36,6 +39,9 @@ export class PolyphonicOscillator {
     this.Oscillator = oscillator;
     this.context = context;
     this.gain = this.context.createGain();
+    this.gain.gain.value = DEFAULT_GAIN;
+    this.compressor = this.context.createDynamicsCompressor();
+    this.gain.connect(this.compressor);
     this.numVoices = voices;
   }
 
@@ -97,9 +103,9 @@ export class PolyphonicOscillator {
    */
   public connect(node: AudioNode | ModularNode) {
     if (node instanceof AudioNode) {
-      this.gain.connect(node);
+      this.compressor.connect(node);
     } else {
-      this.gain.connect(node.outNode);
+      this.compressor.connect(node.outNode);
     }
   }
 

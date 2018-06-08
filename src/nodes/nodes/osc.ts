@@ -4,7 +4,7 @@ const DEAFAULT_ENVEOPE = {
   attack: 0.01,
   decay: 0.001,
   release: 0.02,
-  sustain: 0.1
+  sustain: 1
 };
 
 const DEFAULT_DETUNE_SHIFT = 0.01;
