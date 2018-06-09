@@ -1,4 +1,3 @@
-import { fromEvent } from "rxjs";
 import { ThreeOsc } from "./synth";
 
 const synth = new ThreeOsc();
