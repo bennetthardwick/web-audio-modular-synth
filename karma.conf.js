@@ -5,6 +5,7 @@ module.exports = function(config) {
     preprocessors: {
       "**/*.ts": ["karma-typescript"]
     },
+    autoWatch: true,
     karmaTypescriptConfig: {
       reports: {
         lcovonly: {
@@ -24,11 +25,12 @@ module.exports = function(config) {
         base: "Chrome",
         flags: ["--no-sandbox"]
       }
-    },
-    singleRun: true
+    }
   };
 
   if (process.env.TRAVIS) {
+    configuration.autoWatch = false;
+    configuration.singleRun = true;
     configuration.browsers = ["Chrome_travis_ci"];
   }
 
