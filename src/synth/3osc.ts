@@ -1,6 +1,6 @@
 import { Synth } from ".";
 import { PolyphonicOscillator } from "../modules";
-import { Oscillator, TriangleOscillator } from "../nodes";
+import { TriangleOscillator } from "../nodes";
 
 export interface OscConfig {
   attack?: number;
@@ -32,8 +32,8 @@ export class ThreeOsc extends Synth {
     this.preCompressor = this.context.createGain();
     this.oscs = [
       new PolyphonicOscillator(this.context, TriangleOscillator, 5),
-      new PolyphonicOscillator(this.context, Oscillator, 5),
-      new PolyphonicOscillator(this.context, Oscillator, 5)
+      new PolyphonicOscillator(this.context, TriangleOscillator, 5),
+      new PolyphonicOscillator(this.context, TriangleOscillator, 5)
     ];
     this.oscs.forEach(osc => osc.listen(this.midi));
     this.oscs.forEach(osc => osc.connect(this.preCompressor));

@@ -15,7 +15,7 @@ module.exports = function(config) {
         }
       },
       compilerOptions: {
-        lib: ["dom", "es6"]
+        lib: ["dom", "es6", "es2016.array.include"]
       }
     },
     reporters: ["spec"],
