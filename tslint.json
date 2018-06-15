@@ -7,7 +7,10 @@
     "interface-name": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
-    "no-identical-functions": false
+    "no-identical-functions": false,
+    "no-bitwise": false,
+    "no-console": false,
+    "no-switch-case-fall-through": false
   },
   "rulesDirectory": []
 }

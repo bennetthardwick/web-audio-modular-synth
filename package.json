@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.8",
+    "@types/webmidi": "^2.0.2",
     "awesome-typescript-loader": "^5.0.0",
     "husky": "^0.14.3",
     "inline-source-map": "^0.6.2",
