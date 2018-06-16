@@ -13,7 +13,7 @@ const DEFAULT_DETUNE_SHIFT = 0.01;
 export interface OscillatorConstructor {
   new (
     context: AudioContext,
-    frequency: number,
+    frequency?: number,
     config?: OscillatorConfig
   ): Oscillator;
 }
