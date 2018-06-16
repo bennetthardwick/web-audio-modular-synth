@@ -1,5 +1,6 @@
 import { ModularNode } from "..";
-import { Observable, Subject, timer } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { onContextEvent } from "../../midi";
 
 const DEAFAULT_ENVEOPE = {
   attack: 0.01,
@@ -104,10 +105,10 @@ export class Oscillator implements ModularNode, Envelopable {
       this.context.currentTime
     );
     this.gain.gain.linearRampToValueAtTime(
-      0,
+      0.0,
       this.context.currentTime + this.envelope.release
     );
-    timer(this.envelope.release / 1000).subscribe(() =>
+    onContextEvent(this.context, this.envelope.release).subscribe(() =>
       this.noteStopSubject.next()
     );
   }
