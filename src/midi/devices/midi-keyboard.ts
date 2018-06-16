@@ -37,7 +37,6 @@ export class MidiKeyboard {
     switch (event.data[0] & 0xf0) {
       case 0x90:
         if (event.data[2] !== 0) {
-          console.log("note");
           this.midi.startNote(event.data[1], event.data[2]);
           return;
         }
