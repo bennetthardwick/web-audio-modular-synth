@@ -1,9 +1,9 @@
 import { ThreeOsc } from "./synth";
-import { MidiKeyboard } from "./midi/devices/midi-keyboard";
+import { ComputerKeyboard } from "./midi";
 
 const synth = new ThreeOsc();
 
-const keyboard = new MidiKeyboard(window);
+const keyboard = new ComputerKeyboard(window);
 keyboard.midi.onNote$.subscribe(note => {
   console.log(note);
 

@@ -8,6 +8,7 @@ import {
   SquareOscillator,
   TriangleOscillator
 } from "../../nodes";
+import { first } from "rxjs/operators";
 
 const SIN_OSC = "sine";
 const SQUARE_OSC = "square";
@@ -15,11 +16,13 @@ const TRIANGE_OSC = "triangle";
 const SAW_OSC = "sawtooth";
 
 const DEFAULT_GAIN = 0.8;
+const DEFAULT_VOICE_COUNT = 10;
 
 export class PolyphonicOscillator {
   private voices: { [key: string]: Oscillator } = {};
+  private queue: Oscillator[] = [];
   private numVoices: number;
-  private voicePriority: string[] = [];
+  private voiceCount = 0;
   private Oscillator: OscillatorConstructor;
   private context: AudioContext;
   private gain: GainNode;
@@ -34,7 +37,7 @@ export class PolyphonicOscillator {
   constructor(
     context: AudioContext,
     oscillator: OscillatorConstructor,
-    voices: number
+    voices?: number
   ) {
     this.Oscillator = oscillator;
     this.context = context;
@@ -42,9 +45,14 @@ export class PolyphonicOscillator {
     this.gain.gain.value = DEFAULT_GAIN;
     this.compressor = this.context.createDynamicsCompressor();
     this.gain.connect(this.compressor);
-    this.numVoices = voices;
+    this.numVoices = voices || DEFAULT_VOICE_COUNT;
+    this.generateVoices();
   }
 
+  /**
+   * Listen to a midi stream
+   * @param midi the midi stream to listen to
+   */
   public listen(midi: MidiStream) {
     midi.onNote$.subscribe(note => {
       if (note.type === "on") {
@@ -63,12 +71,16 @@ export class PolyphonicOscillator {
   public playNote(frequencyNote: FrequencyNote, duration?: number) {
     const note = frequencyNote.note.toString();
     if (!this.voices[note]) {
-      this.prepareAddVoice(note);
-      this.voices[note] = new this.Oscillator(
-        this.context,
-        frequencyNote.frequency
-      );
-      this.voices[note].connect(this.gain);
+      if (this.voiceCount === this.numVoices) {
+        return;
+      }
+      const osc = this.queue.pop();
+      if (osc === undefined) {
+        return;
+      }
+      this.voices[note] = osc;
+      this.voices[note].frequency = frequencyNote.frequency;
+      this.voiceCount++;
     } else {
       return;
     }
@@ -93,8 +105,11 @@ export class PolyphonicOscillator {
       return;
     }
     this.voices[note].stop();
-    delete this.voices[note];
-    this.removeVoiceCount(note);
+    this.voices[note].noteStop$.pipe(first()).subscribe(() => {
+      this.queue.push(this.voices[note]);
+      delete this.voices[note];
+      this.voiceCount--;
+    });
   }
 
   /**
@@ -129,24 +144,10 @@ export class PolyphonicOscillator {
     }
   }
 
-  private prepareAddVoice(voice: string): void {
-    this.voicePriority.push(voice);
-    if (this.voicePriority.length > this.numVoices) {
-      this.stopNoteByKey(this.voicePriority.shift() as string);
+  private generateVoices(): void {
+    for (let i = 0; i < this.numVoices; i++) {
+      this.queue[i] = new this.Oscillator(this.context, 440);
+      this.queue[i].connect(this.gain);
     }
-  }
-
-  private removeVoiceCount(voice: string): void {
-    const index = this.voicePriority.indexOf(voice);
-    if (index > -1) {
-      this.voicePriority.splice(index, 1);
-    }
-  }
-
-  private stopNoteByKey(key: string) {
-    if (!this.voices[key]) {
-      return;
-    }
-    this.voices[key].stop();
   }
 }

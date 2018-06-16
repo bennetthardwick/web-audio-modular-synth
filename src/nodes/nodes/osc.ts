@@ -1,7 +1,8 @@
 import { ModularNode } from "..";
+import { Observable, Subject, timer } from "rxjs";
 
 const DEAFAULT_ENVEOPE = {
-  attack: 0.01,
+  attack: 1,
   decay: 0.001,
   release: 0.02,
   sustain: 1
@@ -40,6 +41,7 @@ export class Oscillator implements ModularNode {
   private context: AudioContext;
   private gain: GainNode;
   private envelope: OscillatorEnvelope;
+  private noteStopSubject = new Subject<void>();
 
   /**
    * Create an instance of a sine oscillator
@@ -49,19 +51,20 @@ export class Oscillator implements ModularNode {
    */
   constructor(
     context: AudioContext,
-    frequency: number,
+    frequency?: number,
     config?: OscillatorConfig
   ) {
     this.context = context;
     this.oscillator = this.context.createOscillator();
-    this.oscillator.frequency.value = frequency;
+    this.oscillator.frequency.value = frequency || 440;
     this.envelope = {
       ...DEAFAULT_ENVEOPE,
       ...(config ? config.evelope : null)
     };
     this.gain = this.context.createGain();
-    this.gain.gain.value = this.envelope.sustain;
+    this.gain.gain.value = 0;
     this.oscillator.connect(this.gain);
+    this.oscillator.start();
   }
 
   /**
@@ -80,7 +83,6 @@ export class Oscillator implements ModularNode {
    * Start the osc
    */
   public start() {
-    this.oscillator.start();
     this.gain.gain.linearRampToValueAtTime(
       this.envelope.sustain,
       this.context.currentTime + this.envelope.attack
@@ -91,10 +93,17 @@ export class Oscillator implements ModularNode {
    * Stop the osc
    */
   public stop() {
-    this.oscillator.stop(this.context.currentTime + this.envelope.release);
+    this.gain.gain.cancelScheduledValues(this.context.currentTime);
+    this.gain.gain.setValueAtTime(
+      this.gain.gain.value,
+      this.context.currentTime
+    );
     this.gain.gain.linearRampToValueAtTime(
       0,
       this.context.currentTime + this.envelope.release
+    );
+    timer(this.envelope.release / 1000).subscribe(() =>
+      this.noteStopSubject.next()
     );
   }
 
@@ -130,6 +139,13 @@ export class Oscillator implements ModularNode {
   }
 
   /**
+   * Set the current frequency of the oscillator
+   */
+  set frequency(frequency: number) {
+    this.oscillator.frequency.value = frequency;
+  }
+
+  /**
    * Set an lfo to modulate pitch
    */
   set pitchLFO(modulator: AudioDestinationNode) {
@@ -148,6 +164,10 @@ export class Oscillator implements ModularNode {
    */
   set type(type: OscillatorType) {
     this.oscillator.type = type;
+  }
+
+  get noteStop$(): Observable<void> {
+    return this.noteStopSubject.asObservable();
   }
 }
 
