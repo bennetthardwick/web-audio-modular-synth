@@ -2,8 +2,8 @@ import { ModularNode } from "..";
 import { Observable, Subject, timer } from "rxjs";
 
 const DEAFAULT_ENVEOPE = {
-  attack: 1,
-  decay: 0.001,
+  attack: 0.01,
+  decay: 0.01,
   release: 0.02,
   sustain: 1
 };
@@ -36,7 +36,12 @@ export interface OscillatorConfig {
   evelope?: OscillatorEnvelopeOptions;
 }
 
-export class Oscillator implements ModularNode {
+export interface Envelopable {
+  attack: number;
+  release: number;
+}
+
+export class Oscillator implements ModularNode, Envelopable {
   private oscillator: OscillatorNode;
   private context: AudioContext;
   private gain: GainNode;
@@ -180,7 +185,7 @@ export class SquareOscillator extends Oscillator {
    */
   constructor(
     context: AudioContext,
-    frequency: number,
+    frequency?: number,
     config?: OscillatorConfig
   ) {
     super(context, frequency, config);
@@ -197,7 +202,7 @@ export class TriangleOscillator extends Oscillator {
    */
   constructor(
     context: AudioContext,
-    frequency: number,
+    frequency?: number,
     config?: OscillatorConfig
   ) {
     super(context, frequency, config);
@@ -214,7 +219,7 @@ export class SawOscillator extends Oscillator {
    */
   constructor(
     context: AudioContext,
-    frequency: number,
+    frequency?: number,
     config?: OscillatorConfig
   ) {
     super(context, frequency, config);

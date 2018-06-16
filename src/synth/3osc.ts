@@ -12,7 +12,7 @@ export interface ThreeOscConfig {
   oscThree?: OscConfig;
 }
 
-export const enum Oscs {
+export enum ThreeOscs {
   ONE,
   TWO,
   THREE
@@ -47,7 +47,7 @@ export class ThreeOsc extends Synth {
    * Configure a certain oscillator
    * @param osc the number of the osc (starting at 0)
    */
-  public configure(osc: Oscs): PolyphonicOscillator {
+  public configure(osc: ThreeOscs): PolyphonicOscillator {
     return this.oscs[osc];
   }
 }

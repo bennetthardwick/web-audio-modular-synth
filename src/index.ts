@@ -1,13 +1,11 @@
-import { ThreeOsc } from "./synth";
+import { ThreeOsc, ThreeOscs } from "./synth";
 import { ComputerKeyboard } from "./midi";
 
+const keyboard = new ComputerKeyboard(window);
 const synth = new ThreeOsc();
 
-const keyboard = new ComputerKeyboard(window);
-keyboard.midi.onNote$.subscribe(note => {
-  if (note.type === "on") {
-    synth.playNote(note.note, 100);
-  } else {
-    synth.stopNote(note.note);
-  }
-});
+synth.configure(ThreeOscs.ONE).attack = 2;
+synth.configure(ThreeOscs.TWO).release = 2;
+synth.configure(ThreeOscs.TWO).type = "sine";
+
+synth.listen(keyboard);

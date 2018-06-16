@@ -2,9 +2,9 @@
  * THANKS TO: https://github.com/cwilso/monosynth/blob/gh-pages/index.htm
  */
 
-import { MidiStream } from "..";
+import { MidiStream, MidiDevice } from "..";
 
-export class MidiKeyboard {
+export class MidiKeyboard implements MidiDevice {
   public midi: MidiStream;
   private window: Window;
 

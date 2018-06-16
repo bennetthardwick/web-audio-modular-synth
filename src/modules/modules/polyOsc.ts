@@ -6,7 +6,8 @@ import {
   OscillatorConstructor,
   SawOscillator,
   SquareOscillator,
-  TriangleOscillator
+  TriangleOscillator,
+  Envelopable
 } from "../../nodes";
 import { first } from "rxjs/operators";
 
@@ -18,9 +19,10 @@ const SAW_OSC = "sawtooth";
 const DEFAULT_GAIN = 0.8;
 const DEFAULT_VOICE_COUNT = 10;
 
-export class PolyphonicOscillator {
+export class PolyphonicOscillator implements Envelopable {
   private voices: { [key: string]: Oscillator } = {};
   private queue: Oscillator[] = [];
+  private oscillators: Oscillator[] = [];
   private numVoices: number;
   private voiceCount = 0;
   private Oscillator: OscillatorConstructor;
@@ -127,7 +129,7 @@ export class PolyphonicOscillator {
   /**
    * Set the type of the PolyOsc
    */
-  set type(type: string) {
+  set type(type: OscillatorType) {
     switch (type) {
       case SAW_OSC:
         this.Oscillator = SawOscillator;
@@ -144,10 +146,19 @@ export class PolyphonicOscillator {
     }
   }
 
+  set release(release: number) {
+    this.oscillators.forEach(osc => (osc.release = release));
+  }
+
+  set attack(attack: number) {
+    this.oscillators.forEach(osc => (osc.attack = attack));
+  }
+
   private generateVoices(): void {
     for (let i = 0; i < this.numVoices; i++) {
       this.queue[i] = new this.Oscillator(this.context, 440);
       this.queue[i].connect(this.gain);
+      this.oscillators[i] = this.queue[i];
     }
   }
 }

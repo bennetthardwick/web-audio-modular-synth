@@ -22,6 +22,10 @@ describe("nodes", () => {
         osc = new con(context);
       });
 
+      afterEach(() => {
+        context.close();
+      });
+
       it("emits an event when a note is stopped", () => {
         jasmine.clock().install();
         const stopped = jasmine.createSpy("stopped");

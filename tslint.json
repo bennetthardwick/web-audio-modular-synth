@@ -10,7 +10,8 @@
     "no-identical-functions": false,
     "no-bitwise": false,
     "no-console": false,
-    "no-switch-case-fall-through": false
+    "no-switch-case-fall-through": false,
+    "no-empty": false
   },
   "rulesDirectory": []
 }

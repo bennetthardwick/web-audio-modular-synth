@@ -1,5 +1,5 @@
 import { fromEvent } from "rxjs";
-import { MidiStream } from "..";
+import { MidiStream, MidiDevice } from "..";
 import { filter } from "rxjs/operators";
 
 const KEYBOARD_SCALE: { [key: string]: number } = {
@@ -42,7 +42,7 @@ const KEYBOARD_SCALE: { [key: string]: number } = {
 const BASE_NOTE = 60;
 const BASE_VELOCITY = 100;
 
-export class ComputerKeyboard {
+export class ComputerKeyboard implements MidiDevice {
   public midi: MidiStream;
   private window: Window;
 
