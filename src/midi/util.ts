@@ -34,6 +34,7 @@ export function onContextEvent(
     osc.start(context.currentTime);
     osc.onended = () => {
       observer.next();
+      observer.complete();
       osc.disconnect();
       gain.disconnect();
     };
