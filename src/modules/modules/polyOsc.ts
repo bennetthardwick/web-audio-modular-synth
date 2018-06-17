@@ -4,19 +4,11 @@ import {
   ModularNode,
   Oscillator,
   OscillatorConstructor,
-  SawOscillator,
-  SquareOscillator,
-  TriangleOscillator,
   Envelopable
 } from "../../nodes";
 import { first } from "rxjs/operators";
 
-const SIN_OSC = "sine";
-const SQUARE_OSC = "square";
-const TRIANGE_OSC = "triangle";
-const SAW_OSC = "sawtooth";
-
-const DEFAULT_GAIN = 0.8;
+const DEFAULT_GAIN = 0.5;
 const DEFAULT_VOICE_COUNT = 10;
 
 export class PolyphonicOscillator implements Envelopable {
@@ -28,7 +20,6 @@ export class PolyphonicOscillator implements Envelopable {
   private Oscillator: OscillatorConstructor;
   private context: AudioContext;
   private gain: GainNode;
-  private compressor: DynamicsCompressorNode;
 
   /**
    * Create an intstance of a polyphoic oscillator
@@ -45,8 +36,6 @@ export class PolyphonicOscillator implements Envelopable {
     this.context = context;
     this.gain = this.context.createGain();
     this.gain.gain.value = DEFAULT_GAIN;
-    this.compressor = this.context.createDynamicsCompressor();
-    this.gain.connect(this.compressor);
     this.numVoices = voices || DEFAULT_VOICE_COUNT;
     this.generateVoices();
   }
@@ -107,9 +96,10 @@ export class PolyphonicOscillator implements Envelopable {
       return;
     }
     this.voices[note].stop();
-    this.voices[note].noteStop$.pipe(first()).subscribe(() => {
-      this.queue.push(this.voices[note]);
-      delete this.voices[note];
+    const voc = this.voices[note];
+    delete this.voices[note];
+    voc.noteStop$.pipe(first()).subscribe(() => {
+      this.queue.push(voc);
       this.voiceCount--;
     });
   }
@@ -120,9 +110,9 @@ export class PolyphonicOscillator implements Envelopable {
    */
   public connect(node: AudioNode | ModularNode) {
     if (node instanceof AudioNode) {
-      this.compressor.connect(node);
+      this.gain.connect(node);
     } else {
-      this.compressor.connect(node.outNode);
+      this.gain.connect(node.outNode);
     }
   }
 
@@ -130,20 +120,7 @@ export class PolyphonicOscillator implements Envelopable {
    * Set the type of the PolyOsc
    */
   set type(type: OscillatorType) {
-    switch (type) {
-      case SAW_OSC:
-        this.Oscillator = SawOscillator;
-        break;
-      case SIN_OSC:
-        this.Oscillator = Oscillator;
-        break;
-      case SQUARE_OSC:
-        this.Oscillator = SquareOscillator;
-        break;
-      case TRIANGE_OSC:
-        this.Oscillator = TriangleOscillator;
-        break;
-    }
+    this.oscillators.forEach(osc => (osc.type = type));
   }
 
   set release(release: number) {
