@@ -18,7 +18,7 @@ module.exports = function(config) {
         lib: ["dom", "es6", "es2016.array.include"]
       }
     },
-    reporters: ["spec"],
+    reporters: ["spec", "karma-typescript"],
     browsers: ["Chrome"],
     customLaunchers: {
       Chrome_travis_ci: {
