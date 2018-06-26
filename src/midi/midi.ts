@@ -68,12 +68,4 @@ export class MidiStream {
   public join(midi: MidiStream): Subscription {
     return midi.onNote$.subscribe(note => this.noteSubject$.next(note));
   }
-
-  /**
-   * Stop listening to an external midi stream
-   * @param sub the subscription to stop
-   */
-  public remove(sub: Subscription): void {
-    sub.unsubscribe();
-  }
 }

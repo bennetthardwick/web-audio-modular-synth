@@ -10,9 +10,9 @@ export class Synth {
    * @param frequency the frequency of an A note
    * @param precision the precision of the frequencies
    */
-  constructor(frequency?: number, precision?: number) {
+  constructor(context: AudioContext, frequency?: number, precision?: number) {
     this.midiStream = new MidiStream(frequency, precision);
-    this.audioContext = new AudioContext();
+    this.audioContext = context;
   }
 
   /**

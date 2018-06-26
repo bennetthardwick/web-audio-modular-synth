@@ -1,8 +1,9 @@
 import { ThreeOsc, ThreeOscs } from "./synth";
 import { MidiKeyboard } from "./midi";
 
+const context = new AudioContext();
 const keyboard = new MidiKeyboard(window);
-const synth = new ThreeOsc();
+const synth = new ThreeOsc(context);
 
 synth.configure(ThreeOscs.ONE).type = "sine";
 synth.configure(ThreeOscs.TWO).type = "sine";

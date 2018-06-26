@@ -12,14 +12,15 @@ module.exports = function(config) {
           directory: "coverage",
           filename: "lcov.info",
           subdirectory: "lcov"
-        }
+        },
+        html: "coverage"
       },
       compilerOptions: {
         lib: ["dom", "es6", "es2016.array.include"]
       }
     },
     reporters: ["spec", "karma-typescript"],
-    browsers: ["Chrome"],
+    browsers: ["ChromeHeadless"],
     customLaunchers: {
       Chrome_travis_ci: {
         base: "Chrome",

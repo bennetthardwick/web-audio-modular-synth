@@ -21,8 +21,8 @@ export enum ThreeOscs {
 export class ThreeOsc extends Synth {
   public volume: GainNode;
   private oscs: PolyphonicOscillator[];
-  constructor() {
-    super(440, 0);
+  constructor(context: AudioContext) {
+    super(context, 440, 0);
     this.volume = this.context.createGain();
     this.oscs = [
       new PolyphonicOscillator(this.context, TriangleOscillator, 10),
